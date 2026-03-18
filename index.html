@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小花儿的世界</title>
+<style>
+body{margin:0;font-family:system-ui;background:linear-gradient(160deg,#fdf6ee,#fff8f0);color:#3a3028;}
+.container{max-width:420px;margin:auto;padding:20px;}
+.card{background:rgba(255,255,255,0.7);border-radius:20px;padding:24px;margin-bottom:16px;text-align:center;}
+.beast{font-size:64px;transition:transform .3s;}
+.bar{height:4px;background:#ddd;border-radius:2px;overflow:hidden;}
+.bar-inner{height:100%;background:#e8a0b0;transition:width .5s;}
+button{border:none;border-radius:14px;padding:12px;background:#fff;margin:4px;}
+.log{font-size:12px;max-height:120px;overflow:auto;}
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="container">
+<h2 style="text-align:center">🌸 小花儿的世界</h2>
+
+<div class="card">
+<div id="beast" class="beast">🤍</div>
+<div id="mood">安安静静</div>
+
+<div style="margin-top:12px">
+<div class="bar"><div id="bar" class="bar-inner" style="width:70%"></div></div>
+<div style="font-size:12px">花开度 <span id="heart">70</span>%</div>
+</div>
+</div>
+
+<div class="card">
+<button onclick="doAction('happy')">🫳摸耳朵</button>
+<button onclick="doAction('content')">🥣喂蛋羹</button>
+<button onclick="doAction('sleepy')">🛏哄睡觉</button>
+<button onclick="doAction('clingy')">🤗抱抱</button>
+</div>
+
+<div class="card log" id="log"></div>
+</div>
+
+<script>
+let hearts=70;
+const logs=["小花儿醒了，正在看你"];
+const RANDOM=["歪头看你","花开了一朵","尾巴晃了一下","偷偷靠近你","盯着你发呆"];
+
+function update(){
+document.getElementById("heart").innerText=hearts;
+document.getElementById("bar").style.width=hearts+"%";
+}
+
+function setMood(){
+const beast=document.getElementById("beast");
+const moodText=document.getElementById("mood");
+
+if(hearts>80){beast.innerText="🌸";moodText.innerText="花全开了";}
+else if(hearts>60){beast.innerText="🤍";moodText.innerText="安安静静";}
+else if(hearts>40){beast.innerText="👀";moodText.innerText="有点饿了";}
+else if(hearts>20){beast.innerText="😴";moodText.innerText="小花骨朵";}
+else{beast.innerText="🥺";moodText.innerText="想要抱抱";}
+}
+
+function doAction(type){
+hearts=Math.min(100,hearts+12);
+const beast=document.getElementById("beast");
+beast.style.animation="float .5s";
+setTimeout(()=>beast.style.animation="",500);
+
+logs.unshift("你做了："+type);
+renderLog();
+
+setMood();
+update();
+}
+
+function renderLog(){
+document.getElementById("log").innerHTML=logs.slice(0,10).map(l=>"<div>"+l+"</div>").join("");
+}
+
+setInterval(()=>{
+if(Math.random()<0.4){
+logs.unshift(RANDOM[Math.floor(Math.random()*RANDOM.length)]);
+renderLog();
+}
+hearts=Math.max(20,hearts-2);
+update();
+setMood();
+},5000);
+
+renderLog();
+update();
+setMood();
+</script>
+</body>
+</html>
